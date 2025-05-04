@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -19,8 +18,8 @@ interface Event {
   registrationDeadline: string;
 }
 
-// Sample event data
-const eventsData: Event[] = [
+// Default event data if no stored events exist
+const defaultEventsData: Event[] = [
   {
     id: 1,
     name: 'Tech Innovate 2023',
@@ -120,7 +119,8 @@ const eventsData: Event[] = [
 ];
 
 const Events = () => {
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>(eventsData);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -131,16 +131,39 @@ const Events = () => {
     const userRole = localStorage.getItem('userRole');
     setIsLoggedIn(!!userRole);
     
-    // Get user interests from localStorage (in real app, this would come from API)
+    // Get user interests from localStorage
     const storedInterests = localStorage.getItem('userInterests');
     if (storedInterests) {
       setUserInterests(JSON.parse(storedInterests));
+    }
+    
+    // Load events from localStorage or use default data
+    const storedEvents = localStorage.getItem('events');
+    if (storedEvents) {
+      // Get admin-created events
+      const adminEvents = JSON.parse(storedEvents).map((event: any) => ({
+        id: event.id,
+        name: event.name,
+        description: `Event organized at ${event.venue}`,
+        date: event.date,
+        time: '10:00 AM - 4:00 PM', // Default time
+        venue: event.venue,
+        image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80', // Default image
+        category: 'College',
+        status: new Date(event.date) > new Date() ? 'upcoming' : 'past',
+        registrationDeadline: event.date, // Use same date as event date for deadline
+      }));
+      
+      // Combine with default events for better display
+      setEvents([...adminEvents, ...defaultEventsData]);
+    } else {
+      setEvents(defaultEventsData);
     }
   }, []);
   
   useEffect(() => {
     // Filter events based on search term and active filter
-    let filtered = eventsData;
+    let filtered = events;
     
     if (searchTerm) {
       filtered = filtered.filter(
@@ -160,7 +183,7 @@ const Events = () => {
     }
     
     setFilteredEvents(filtered);
-  }, [searchTerm, activeFilter]);
+  }, [searchTerm, activeFilter, events]);
   
   const toggleInterest = (eventId: number) => {
     if (!isLoggedIn) {

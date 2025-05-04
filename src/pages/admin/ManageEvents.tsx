@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Edit, Eye } from 'lucide-react';
 import AddEventDialog from '@/components/admin/AddEventDialog';
 
 interface Event {
@@ -34,62 +34,62 @@ const ManageEvents = () => {
     }
     
     // Load events from localStorage or use sample data
-    const loadEvents = () => {
-      const storedEvents = localStorage.getItem('events');
-      if (storedEvents) {
-        setEvents(JSON.parse(storedEvents));
-      } else {
-        // Sample data if no events exist
-        const sampleEvents: Event[] = [
-          {
-            id: 1,
-            name: 'Tech Innovate 2023',
-            date: '2023-06-15',
-            venue: 'Main Auditorium',
-            registrations: 120,
-            status: 'Completed',
-          },
-          {
-            id: 2,
-            name: 'Cultural Night 2023',
-            date: '2023-07-25',
-            venue: 'Open Air Theatre',
-            registrations: 180,
-            status: 'Completed',
-          },
-          {
-            id: 3,
-            name: 'Hackathon 2023',
-            date: '2023-09-10',
-            venue: 'CS Building',
-            registrations: 75,
-            status: 'Completed',
-          },
-          {
-            id: 4,
-            name: 'Annual Sports Meet 2023',
-            date: '2023-11-05',
-            venue: 'Sports Complex',
-            registrations: 210,
-            status: 'Completed',
-          },
-          {
-            id: 5,
-            name: 'Tech Innovate 2024',
-            date: '2024-06-20',
-            venue: 'Main Auditorium',
-            registrations: 45,
-            status: 'Upcoming',
-          },
-        ];
-        setEvents(sampleEvents);
-        localStorage.setItem('events', JSON.stringify(sampleEvents));
-      }
-      setIsLoading(false);
-    };
-
     loadEvents();
   }, [navigate]);
+
+  const loadEvents = () => {
+    const storedEvents = localStorage.getItem('events');
+    if (storedEvents) {
+      setEvents(JSON.parse(storedEvents));
+    } else {
+      // Sample data if no events exist
+      const sampleEvents: Event[] = [
+        {
+          id: 1,
+          name: 'Tech Innovate 2023',
+          date: '2023-06-15',
+          venue: 'Main Auditorium',
+          registrations: 120,
+          status: 'Completed',
+        },
+        {
+          id: 2,
+          name: 'Cultural Night 2023',
+          date: '2023-07-25',
+          venue: 'Open Air Theatre',
+          registrations: 180,
+          status: 'Completed',
+        },
+        {
+          id: 3,
+          name: 'Hackathon 2023',
+          date: '2023-09-10',
+          venue: 'CS Building',
+          registrations: 75,
+          status: 'Completed',
+        },
+        {
+          id: 4,
+          name: 'Annual Sports Meet 2023',
+          date: '2023-11-05',
+          venue: 'Sports Complex',
+          registrations: 210,
+          status: 'Completed',
+        },
+        {
+          id: 5,
+          name: 'Tech Innovate 2024',
+          date: '2024-06-20',
+          venue: 'Main Auditorium',
+          registrations: 45,
+          status: 'Upcoming',
+        },
+      ];
+      setEvents(sampleEvents);
+      localStorage.setItem('events', JSON.stringify(sampleEvents));
+    }
+    setIsLoading(false);
+  };
 
   const handleAddEvent = (newEvent: Omit<Event, 'id'>) => {
     const newId = events.length > 0 ? Math.max(...events.map(event => event.id)) + 1 : 1;

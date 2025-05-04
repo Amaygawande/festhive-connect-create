@@ -1,87 +1,71 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 const SignIn = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
     
-    try {
-      // In a real application, this would be an API call to your authentication service
-      console.log('Signing in with:', formData);
+    // Simulate authentication (in a real app, this would be an API call)
+    setTimeout(() => {
+      setIsLoading(false);
       
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, let's say admin user is admin@ies.edu with password "admin"
-      // and student user is student@ies.edu with password "student"
-      if (formData.email === 'admin@ies.edu' && formData.password === 'admin') {
+      // Demo credentials for testing
+      if (email === 'admin@ies.edu' && password === 'admin123') {
         localStorage.setItem('userRole', 'admin');
-        localStorage.setItem('userEmail', formData.email);
-        toast.success('Welcome back, Admin!');
+        localStorage.setItem('userEmail', email);
+        toast.success('Signed in as Admin successfully');
         navigate('/admin/dashboard');
-      } else if (formData.email === 'student@ies.edu' && formData.password === 'student') {
+      } else if (email === 'student@ies.edu' && password === 'student123') {
         localStorage.setItem('userRole', 'student');
-        localStorage.setItem('userEmail', formData.email);
-        toast.success('Welcome back, Student!');
+        localStorage.setItem('userEmail', email);
+        toast.success('Signed in successfully');
         navigate('/student/dashboard');
       } else {
-        toast.error('Invalid email or password. Please try again.');
+        // For demo purposes, allow any credential combination and set as student
+        localStorage.setItem('userRole', 'student');
+        localStorage.setItem('userEmail', email);
+        toast.success('Signed in successfully');
+        navigate('/student/dashboard');
       }
-    } catch (error) {
-      console.error('Sign in error:', error);
-      toast.error('An error occurred during sign in. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    }, 1000);
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-festblue">
       <Navbar />
       
-      <div className="flex-grow flex items-center justify-center py-20">
-        <div className="glass-card max-w-md w-full p-8">
+      <div className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="glass-card p-8 max-w-md w-full">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white">Welcome Back</h1>
-            <p className="text-gray-300 mt-2">Sign in to your IES FESTHIVE account</p>
+            <h2 className="text-3xl font-bold text-white">Sign In</h2>
+            <p className="mt-2 text-gray-300">Sign in to your IES FESTHIVE account</p>
           </div>
           
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
-                Email / Roll Number
+                Email address
               </label>
               <input
                 id="email"
                 name="email"
-                type="text"
-                autoComplete="email"
+                type="email"
                 required
-                value={formData.email}
-                onChange={handleChange}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2 bg-festblue-light border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-festblue-accent text-white"
-                placeholder="Enter your email or roll number"
+                placeholder="student@ies.edu or admin@ies.edu"
               />
             </div>
             
@@ -93,56 +77,78 @@ const SignIn = () => {
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
                 required
-                value={formData.password}
-                onChange={handleChange}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-2 bg-festblue-light border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-festblue-accent text-white"
-                placeholder="Enter your password"
+                placeholder="student123 or admin123"
               />
             </div>
             
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
-                  id="remember_me"
-                  name="remember_me"
+                  id="remember-me"
+                  name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-festblue-accent focus:ring-festblue-accent border-gray-600 rounded"
+                  className="h-4 w-4 bg-festblue-light border-gray-600 rounded text-festblue-accent focus:ring-festblue-accent"
                 />
-                <label htmlFor="remember_me" className="ml-2 block text-sm text-gray-300">
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
                   Remember me
                 </label>
               </div>
               
               <div className="text-sm">
-                <a href="#" className="font-medium text-festblue-accent hover:text-festblue-accent/80">
-                  Forgot your password?
+                <a href="#" className="text-festblue-accent hover:text-festblue-accent/80">
+                  Forgot password?
                 </a>
               </div>
             </div>
             
-            <Button
-              type="submit"
-              className="w-full bg-festblue-accent hover:bg-festblue-accent/80 text-white"
-              disabled={loading}
-            >
-              {loading ? 'Signing In...' : 'Sign In'}
-            </Button>
-            
-            <div className="text-center mt-4 text-gray-300">
+            <div>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-festblue-accent hover:bg-festblue-accent/80 py-2"
+              >
+                {isLoading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Signing in...
+                  </>
+                ) : (
+                  'Sign in'
+                )}
+              </Button>
+            </div>
+          </form>
+          
+          <div className="mt-6 text-center">
+            <p className="text-gray-300">
               Don't have an account?{' '}
               <Link to="/signup" className="text-festblue-accent hover:text-festblue-accent/80">
                 Sign up
               </Link>
+            </p>
+            
+            <div className="mt-4">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-600"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-festblue-light text-gray-300">Demo Credentials</span>
+                </div>
+              </div>
+              
+              <div className="mt-2 grid gap-2">
+                <div className="text-xs text-gray-300">Admin: admin@ies.edu / admin123</div>
+                <div className="text-xs text-gray-300">Student: student@ies.edu / student123</div>
+              </div>
             </div>
-          </form>
-          
-          {/* Demo account info for testing */}
-          <div className="mt-8 p-4 border border-gray-700 rounded-lg bg-festblue/50">
-            <h4 className="font-semibold text-white mb-2">Demo Accounts:</h4>
-            <p className="text-sm text-gray-300 mb-1">Admin: admin@ies.edu / admin</p>
-            <p className="text-sm text-gray-300">Student: student@ies.edu / student</p>
           </div>
         </div>
       </div>

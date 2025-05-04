@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -15,105 +15,64 @@ const SignUp = () => {
     confirmPassword: '',
     role: 'student',
   });
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-    
-    // Clear the error for this field when the user starts typing again
-    if (errors[name]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
   };
-
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-    
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!formData.rollNo.trim()) {
-      newErrors.rollNo = 'Roll Number is required';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-    
-    return newErrors;
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    // Basic validation
+    if (formData.password !== formData.confirmPassword) {
+      toast.error('Passwords do not match');
       return;
     }
     
-    setLoading(true);
+    if (formData.password.length < 6) {
+      toast.error('Password must be at least 6 characters long');
+      return;
+    }
     
-    try {
-      // In a real application, this would be an API call to your registration service
-      console.log('Registering with:', formData);
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+    setIsLoading(true);
+    
+    // Simulate account creation (in a real app, this would be an API call)
+    setTimeout(() => {
+      // Store user information (in a real app, this would be done on the server)
       localStorage.setItem('userRole', formData.role);
       localStorage.setItem('userEmail', formData.email);
+      localStorage.setItem('userName', formData.name);
       
-      toast.success('Account created successfully!');
+      setIsLoading(false);
+      toast.success('Account created successfully');
       
+      // Redirect based on role
       if (formData.role === 'admin') {
         navigate('/admin/dashboard');
       } else {
         navigate('/student/dashboard');
       }
-    } catch (error) {
-      console.error('Registration error:', error);
-      toast.error('An error occurred during registration. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    }, 1500);
   };
-
+  
   return (
     <div className="min-h-screen flex flex-col bg-festblue">
       <Navbar />
       
-      <div className="flex-grow flex items-center justify-center py-20">
-        <div className="glass-card max-w-md w-full p-8">
+      <div className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="glass-card p-8 max-w-md w-full">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white">Create Account</h1>
-            <p className="text-gray-300 mt-2">Join IES FESTHIVE and start exploring college events</p>
+            <h2 className="text-3xl font-bold text-white">Create Account</h2>
+            <p className="mt-2 text-gray-300">Sign up for IES FESTHIVE</p>
           </div>
           
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
                 Full Name
@@ -126,27 +85,22 @@ const SignUp = () => {
                 value={formData.name}
                 onChange={handleChange}
                 className="w-full px-4 py-2 bg-festblue-light border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-festblue-accent text-white"
-                placeholder="Enter your full name"
               />
-              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
             </div>
             
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
-                Email Address
+                Email address
               </label>
               <input
                 id="email"
                 name="email"
                 type="email"
-                autoComplete="email"
                 required
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full px-4 py-2 bg-festblue-light border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-festblue-accent text-white"
-                placeholder="Enter your email address"
               />
-              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </div>
             
             <div>
@@ -161,9 +115,7 @@ const SignUp = () => {
                 value={formData.rollNo}
                 onChange={handleChange}
                 className="w-full px-4 py-2 bg-festblue-light border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-festblue-accent text-white"
-                placeholder="Enter your college roll number"
               />
-              {errors.rollNo && <p className="text-red-500 text-xs mt-1">{errors.rollNo}</p>}
             </div>
             
             <div>
@@ -174,14 +126,11 @@ const SignUp = () => {
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="new-password"
                 required
                 value={formData.password}
                 onChange={handleChange}
                 className="w-full px-4 py-2 bg-festblue-light border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-festblue-accent text-white"
-                placeholder="Create a password"
               />
-              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
             </div>
             
             <div>
@@ -192,14 +141,11 @@ const SignUp = () => {
                 id="confirmPassword"
                 name="confirmPassword"
                 type="password"
-                autoComplete="new-password"
                 required
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 className="w-full px-4 py-2 bg-festblue-light border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-festblue-accent text-white"
-                placeholder="Confirm your password"
               />
-              {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
             </div>
             
             <div>
@@ -218,21 +164,35 @@ const SignUp = () => {
               </select>
             </div>
             
-            <Button
-              type="submit"
-              className="w-full bg-festblue-accent hover:bg-festblue-accent/80 text-white mt-6"
-              disabled={loading}
-            >
-              {loading ? 'Creating Account...' : 'Create Account'}
-            </Button>
-            
-            <div className="text-center mt-4 text-gray-300">
+            <div className="pt-2">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-festblue-accent hover:bg-festblue-accent/80 py-2"
+              >
+                {isLoading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Creating account...
+                  </>
+                ) : (
+                  'Sign up'
+                )}
+              </Button>
+            </div>
+          </form>
+          
+          <div className="mt-6 text-center">
+            <p className="text-gray-300">
               Already have an account?{' '}
               <Link to="/signin" className="text-festblue-accent hover:text-festblue-accent/80">
                 Sign in
               </Link>
-            </div>
-          </form>
+            </p>
+          </div>
         </div>
       </div>
       
