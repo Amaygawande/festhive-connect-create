@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { sendOTPEmail } from '@/utils/emailService';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const SignUp = () => {
     }));
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Basic validation
@@ -47,8 +48,10 @@ const SignUp = () => {
     
     setIsLoading(true);
     
-    // Simulate sending OTP to email (in a real app, this would be an API call)
-    setTimeout(() => {
+    try {
+      // Send OTP to the user's email
+      await sendOTPEmail(formData.email);
+      
       setIsLoading(false);
       
       // Navigate to OTP verification page, passing user data
@@ -63,7 +66,11 @@ const SignUp = () => {
       });
       
       toast.success(`A verification code has been sent to ${formData.email}`);
-    }, 1500);
+    } catch (error) {
+      setIsLoading(false);
+      toast.error('Failed to send verification code. Please try again.');
+      console.error("Error sending verification code:", error);
+    }
   };
   
   return (
@@ -74,7 +81,7 @@ const SignUp = () => {
         <div className="glass-card p-8 max-w-md w-full">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-white">Create Account</h2>
-            <p className="mt-2 text-gray-300">Sign up for IES FESTHIVE</p>
+            <p className="mt-2 text-gray-300">Sign up for IES UNIVERSITY</p>
           </div>
           
           <form className="space-y-4" onSubmit={handleSubmit}>

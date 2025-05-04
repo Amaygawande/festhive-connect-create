@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 
 const Hero = () => {
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1500673922987-e212871fec22?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2400&q=80)' }}>
-      <div className="absolute inset-0 bg-gradient-to-b from-festblue/80 to-festblue/95"></div>
+    <div className="relative min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/lovable-uploads/f32ffd27-9453-4435-af69-4e31d1b2e537.png)' }}>
+      <div className="absolute inset-0 bg-gradient-to-b from-festblue/95 to-festblue/90"></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.h1 
@@ -17,7 +17,7 @@ const Hero = () => {
           className="text-4xl md:text-6xl font-extrabold text-white mb-4"
         >
           <span className="block">Welcome to</span>
-          <span className="block text-festblue-accent">IES FESTHIVE</span>
+          <span className="block text-festblue-accent">IES UNIVERSITY BHOPAL</span>
         </motion.h1>
         
         <motion.p 

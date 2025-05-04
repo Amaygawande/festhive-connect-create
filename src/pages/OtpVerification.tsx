@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -10,30 +10,98 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { sendOTPEmail, verifyOTP } from '@/utils/emailService';
 
 const OtpVerification = () => {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [resendDisabled, setResendDisabled] = useState(false);
+  const [countdown, setCountdown] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const { email, role, name, password, rollNo } = location.state || {};
   
-  // Generate a simple demo OTP - in a real app this would be sent via email
-  const demoOtp = "123456";
+  // Send OTP when component mounts
+  useEffect(() => {
+    if (email) {
+      handleSendOtp(false);
+    } else {
+      toast.error("Email address missing. Please go back to sign up.");
+    }
+  }, []);
   
-  const handleVerify = () => {
+  // Countdown timer for resend button
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (countdown === 0) {
+      setResendDisabled(false);
+    }
+  }, [countdown]);
+  
+  const handleSendOtp = async (isResend = true) => {
+    if (!email) {
+      toast.error("Email address missing. Please go back to sign up.");
+      return;
+    }
+    
+    try {
+      setIsLoading(true);
+      
+      // Send OTP to email
+      const sentOtp = await sendOTPEmail(email);
+      
+      // In a production app, we would NOT return the actual OTP from the backend
+      // This is only for demo purposes
+      if (isResend) {
+        toast.success(`Verification code resent to ${email}`);
+      } else {
+        toast.success(`Verification code sent to ${email}`);
+      }
+      
+      // For demo purposes only, display the OTP
+      console.log(`Demo OTP for ${email}: ${sentOtp}`);
+      
+      // Disable resend button for 30 seconds
+      setResendDisabled(true);
+      setCountdown(30);
+    } catch (error) {
+      toast.error("Failed to send verification code. Please try again.");
+      console.error("Error sending OTP:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleResendOtp = () => {
+    if (!resendDisabled) {
+      handleSendOtp(true);
+    }
+  };
+  
+  const handleVerify = async () => {
     if (!otp) {
-      toast.error("Please enter OTP");
+      toast.error("Please enter verification code");
+      return;
+    }
+    
+    if (!email) {
+      toast.error("Email address missing. Please go back to sign up.");
       return;
     }
     
     setIsLoading(true);
     
-    // Simulate API verification - in a real app, this would validate against a backend
-    setTimeout(() => {
-      if (otp === demoOtp) {
+    try {
+      // Verify the OTP
+      const isValid = verifyOTP(email, otp);
+      
+      if (isValid) {
         // Store user data in localStorage as a simple DB simulation
-        localStorage.setItem('userRole', role);
+        localStorage.setItem('userRole', role || 'student');
         localStorage.setItem('userEmail', email);
         localStorage.setItem('userName', name || '');
         localStorage.setItem('emailVerified', 'true');
@@ -49,13 +117,13 @@ const OtpVerification = () => {
         }
       } else {
         setIsLoading(false);
-        toast.error('Invalid OTP. Please try again.');
+        toast.error('Invalid verification code. Please try again.');
       }
-    }, 1500);
-  };
-  
-  const handleResendOtp = () => {
-    toast.success(`Demo OTP: ${demoOtp} (This would be sent via email in a real app)`);
+    } catch (error) {
+      setIsLoading(false);
+      toast.error('Something went wrong. Please try again.');
+      console.error("Error verifying OTP:", error);
+    }
   };
   
   return (
@@ -113,17 +181,16 @@ const OtpVerification = () => {
                 Didn't receive a code?{' '}
                 <button 
                   onClick={handleResendOtp}
-                  className="text-festblue-accent hover:text-festblue-accent/80"
+                  disabled={resendDisabled}
+                  className={`${resendDisabled 
+                    ? 'text-gray-500 cursor-not-allowed' 
+                    : 'text-festblue-accent hover:text-festblue-accent/80'}`}
                 >
-                  Send again
+                  {resendDisabled 
+                    ? `Resend in ${countdown}s` 
+                    : 'Send again'}
                 </button>
               </p>
-              
-              {/* For demo purposes */}
-              <div className="mt-6 p-3 bg-festblue-light/30 rounded-lg">
-                <p className="text-xs text-gray-400">Demo OTP: {demoOtp}</p>
-                <p className="text-xs text-gray-400 mt-1">(This simulates an email you would receive)</p>
-              </div>
             </div>
           </div>
         </div>
