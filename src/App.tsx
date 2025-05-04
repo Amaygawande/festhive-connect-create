@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Events from "./pages/Events";
 import SignIn from "./pages/SignIn";
@@ -19,24 +19,22 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-          
-          {/* Student Routes */}
-          <Route path="/student/dashboard" element={<StudentDashboard />} />
-          
-          {/* Admin Routes */}
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          
-          {/* 404 Not Found */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        
+        {/* Student Routes */}
+        <Route path="/student/dashboard" element={<StudentDashboard />} />
+        
+        {/* Admin Routes */}
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        
+        {/* 404 Not Found */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </TooltipProvider>
   </QueryClientProvider>
 );
