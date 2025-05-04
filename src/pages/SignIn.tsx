@@ -24,19 +24,44 @@ const SignIn = () => {
       if (email === 'admin@ies.edu' && password === 'admin123') {
         localStorage.setItem('userRole', 'admin');
         localStorage.setItem('userEmail', email);
+        localStorage.setItem('emailVerified', 'true');
         toast.success('Signed in as Admin successfully');
         navigate('/admin/dashboard');
       } else if (email === 'student@ies.edu' && password === 'student123') {
         localStorage.setItem('userRole', 'student');
         localStorage.setItem('userEmail', email);
+        localStorage.setItem('emailVerified', 'true');
         toast.success('Signed in successfully');
         navigate('/student/dashboard');
       } else {
-        // For demo purposes, allow any credential combination and set as student
-        localStorage.setItem('userRole', 'student');
-        localStorage.setItem('userEmail', email);
-        toast.success('Signed in successfully');
-        navigate('/student/dashboard');
+        // Check if this is a registered user
+        const storedEmail = localStorage.getItem('userEmail');
+        const emailVerified = localStorage.getItem('emailVerified');
+        
+        if (storedEmail === email) {
+          if (emailVerified === 'true') {
+            const userRole = localStorage.getItem('userRole') || 'student';
+            localStorage.setItem('userEmail', email);
+            toast.success('Signed in successfully');
+            
+            if (userRole === 'admin') {
+              navigate('/admin/dashboard');
+            } else {
+              navigate('/student/dashboard');
+            }
+          } else {
+            // Email not verified, send to verification page
+            toast.error('Email not verified. Please verify your email first.');
+            navigate('/verify-otp', { state: { email } });
+          }
+        } else {
+          // For demo purposes, allow any credential combination and set as student
+          localStorage.setItem('userRole', 'student');
+          localStorage.setItem('userEmail', email);
+          localStorage.setItem('emailVerified', 'true');
+          toast.success('Signed in successfully');
+          navigate('/student/dashboard');
+        }
       }
     }, 1000);
   };

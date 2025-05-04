@@ -40,24 +40,29 @@ const SignUp = () => {
       return;
     }
     
+    if (!formData.email.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+    
     setIsLoading(true);
     
-    // Simulate account creation (in a real app, this would be an API call)
+    // Simulate sending OTP to email (in a real app, this would be an API call)
     setTimeout(() => {
-      // Store user information (in a real app, this would be done on the server)
-      localStorage.setItem('userRole', formData.role);
-      localStorage.setItem('userEmail', formData.email);
-      localStorage.setItem('userName', formData.name);
-      
       setIsLoading(false);
-      toast.success('Account created successfully');
       
-      // Redirect based on role
-      if (formData.role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/student/dashboard');
-      }
+      // Navigate to OTP verification page, passing user data
+      navigate('/verify-otp', { 
+        state: { 
+          email: formData.email,
+          role: formData.role,
+          name: formData.name,
+          password: formData.password,
+          rollNo: formData.rollNo
+        } 
+      });
+      
+      toast.success(`A verification code has been sent to ${formData.email}`);
     }, 1500);
   };
   
@@ -176,7 +181,7 @@ const SignUp = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Creating account...
+                    Processing...
                   </>
                 ) : (
                   'Sign up'

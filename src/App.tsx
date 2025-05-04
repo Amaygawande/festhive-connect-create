@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Events from "./pages/Events";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import OtpVerification from "./pages/OtpVerification";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageEvents from "./pages/admin/ManageEvents";
@@ -26,6 +27,7 @@ const App = () => (
         <Route path="/events" element={<Events />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/verify-otp" element={<OtpVerification />} />
         
         {/* Student Routes */}
         <Route path="/student/dashboard" element={<StudentDashboard />} />
