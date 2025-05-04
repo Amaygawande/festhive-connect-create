@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -207,11 +206,11 @@ const AdminDashboard = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Button asChild className="bg-festblue-accent hover:bg-festblue-accent/80">
-                <Link to="/admin/events/create">
+                <Link to="/admin/events">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
                   </svg>
-                  Create Event
+                  Manage Events
                 </Link>
               </Button>
               
