@@ -13,34 +13,37 @@ import StudentDashboard from "./pages/student/StudentDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageEvents from "./pages/admin/ManageEvents";
 import NotFound from "./pages/NotFound";
+import React from 'react';
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/verify-otp" element={<OtpVerification />} />
-        
-        {/* Student Routes */}
-        <Route path="/student/dashboard" element={<StudentDashboard />} />
-        
-        {/* Admin Routes */}
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/events" element={<ManageEvents />} />
-        
-        {/* 404 Not Found */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/verify-otp" element={<OtpVerification />} />
+          
+          {/* Student Routes */}
+          <Route path="/student/dashboard" element={<StudentDashboard />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/events" element={<ManageEvents />} />
+          
+          {/* 404 Not Found */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </React.StrictMode>
 );
 
 export default App;
