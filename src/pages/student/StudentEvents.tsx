@@ -21,6 +21,7 @@ interface Event {
 const StudentEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [registeredEvents, setRegisteredEvents] = useState<number[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -98,6 +99,15 @@ const StudentEvents = () => {
       setEvents(sampleEvents);
       localStorage.setItem('events', JSON.stringify(sampleEvents));
     }
+    
+    // Load registered events
+    const storedRegisteredEvents = localStorage.getItem('registeredEvents');
+    if (storedRegisteredEvents) {
+      setRegisteredEvents(JSON.parse(storedRegisteredEvents));
+    } else {
+      localStorage.setItem('registeredEvents', JSON.stringify([]));
+    }
+    
     setIsLoading(false);
   };
 
@@ -111,8 +121,18 @@ const StudentEvents = () => {
   };
 
   const handleRegister = (eventId: number) => {
-    // In a real app, this would make an API call to register the user
-    // For demo purposes, we'll update the local storage
+    // Check if already registered
+    if (registeredEvents.includes(eventId)) {
+      toast.info('You have already registered for this event');
+      return;
+    }
+    
+    // Update registered events
+    const updatedRegisteredEvents = [...registeredEvents, eventId];
+    setRegisteredEvents(updatedRegisteredEvents);
+    localStorage.setItem('registeredEvents', JSON.stringify(updatedRegisteredEvents));
+    
+    // Update event registrations count
     const updatedEvents = events.map(event => {
       if (event.id === eventId) {
         return {
@@ -125,7 +145,11 @@ const StudentEvents = () => {
     
     setEvents(updatedEvents);
     localStorage.setItem('events', JSON.stringify(updatedEvents));
-    toast.success('Successfully registered for event!');
+    toast.success('Successfully registered for the event!');
+  };
+
+  const isRegistered = (eventId: number) => {
+    return registeredEvents.includes(eventId);
   };
 
   return (
@@ -199,14 +223,20 @@ const StudentEvents = () => {
                   <CardFooter>
                     <Button 
                       onClick={() => handleRegister(event.id)}
-                      disabled={event.status !== 'Upcoming'}
+                      disabled={event.status !== 'Upcoming' || isRegistered(event.id)}
                       className={`w-full ${
-                        event.status === 'Upcoming'
-                          ? 'bg-festblue-accent hover:bg-festblue-accent/80'
-                          : 'bg-gray-700 cursor-not-allowed'
+                        event.status !== 'Upcoming'
+                          ? 'bg-gray-700 cursor-not-allowed'
+                          : isRegistered(event.id)
+                            ? 'bg-green-600 hover:bg-green-700'
+                            : 'bg-festblue-accent hover:bg-festblue-accent/80'
                       }`}
                     >
-                      {event.status === 'Upcoming' ? 'Register Now' : 'Event Completed'}
+                      {event.status !== 'Upcoming' 
+                        ? 'Event Completed' 
+                        : isRegistered(event.id) 
+                          ? 'Registered' 
+                          : 'Register Now'}
                     </Button>
                   </CardFooter>
                 </Card>

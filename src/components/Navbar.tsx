@@ -19,7 +19,7 @@ const navItems: NavItem[] = [
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // This would be replaced by your auth state
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userRole')); 
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -27,6 +27,26 @@ const Navbar = () => {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    closeMobileMenu();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    } else if (location.pathname !== '/') {
+      // If not on home page, navigate home first then scroll after page loads
+      localStorage.setItem('scrollTo', sectionId);
+    }
+  };
+
+  const handleNavClick = (href: string) => {
+    if (href.startsWith('/#')) {
+      const sectionId = href.substring(2);
+      scrollToSection(sectionId);
+      return false; // Prevent default link behavior
+    }
+    return true; // Allow default link behavior
   };
 
   return (
@@ -50,7 +70,12 @@ const Navbar = () => {
                   className={`${
                     location.pathname === item.href ? 'text-festblue-accent' : 'text-gray-300'
                   } hover:text-festblue-accent px-3 py-2 rounded-md text-sm font-medium transition-colors`}
-                  onClick={closeMobileMenu}
+                  onClick={(e) => {
+                    if (!handleNavClick(item.href)) {
+                      e.preventDefault();
+                    }
+                    closeMobileMenu();
+                  }}
                 >
                   {item.label}
                 </Link>
@@ -70,8 +95,13 @@ const Navbar = () => {
                 </Button>
               </>
             ) : (
-              <Button asChild className="bg-festblue-accent hover:bg-festblue-accent/90">
-                <Link to="/dashboard">Dashboard</Link>
+              <Button 
+                asChild 
+                className="bg-festblue-accent hover:bg-festblue-accent/90"
+              >
+                <Link to={localStorage.getItem('userRole') === 'admin' ? '/admin/dashboard' : '/student/dashboard'}>
+                  Dashboard
+                </Link>
               </Button>
             )}
           </div>
@@ -107,7 +137,12 @@ const Navbar = () => {
               className={`${
                 location.pathname === item.href ? 'bg-festblue-accent text-white' : 'text-gray-300 hover:bg-festblue/80 hover:text-white'
               } block px-3 py-2 rounded-md text-base font-medium`}
-              onClick={closeMobileMenu}
+              onClick={(e) => {
+                if (!handleNavClick(item.href)) {
+                  e.preventDefault();
+                }
+                closeMobileMenu();
+              }}
             >
               {item.label}
             </Link>
@@ -131,7 +166,7 @@ const Navbar = () => {
             </>
           ) : (
             <Link
-              to="/dashboard"
+              to={localStorage.getItem('userRole') === 'admin' ? '/admin/dashboard' : '/student/dashboard'}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-festblue/80 hover:text-white"
               onClick={closeMobileMenu}
             >

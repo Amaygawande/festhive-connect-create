@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Hero from '@/components/home/Hero';
@@ -9,6 +9,20 @@ import ImageCarousel from '@/components/home/ImageCarousel';
 import ContactForm from '@/components/home/ContactForm';
 
 const Home = () => {
+  useEffect(() => {
+    // Check if there's a section to scroll to (from navigation)
+    const scrollToSection = localStorage.getItem('scrollTo');
+    if (scrollToSection) {
+      localStorage.removeItem('scrollTo');
+      setTimeout(() => {
+        const element = document.getElementById(scrollToSection);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-festblue">
       <Navbar />

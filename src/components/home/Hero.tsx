@@ -32,45 +32,36 @@ const Hero = () => {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-10 flex flex-col sm:flex-row justify-center gap-4"
-        >
-          <Button 
-            asChild 
-            size="lg"
-            className="bg-festblue-accent hover:bg-festblue-accent/80 text-lg px-8"
-          >
-            <Link to="/events">Explore Events</Link>
-          </Button>
-          <Button 
-            asChild 
-            variant="outline" 
-            size="lg"
-            className="border-white text-white hover:bg-white/10 text-lg px-8"
-          >
-            <a href="#contact">Contact Us</a>
-          </Button>
-        </motion.div>
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-8 flex flex-col sm:flex-row justify-center gap-4"
+          className="mt-12 flex flex-col sm:flex-row justify-center gap-6"
         >
           <Button 
             asChild 
             size="lg"
-            className="bg-green-600 hover:bg-green-700 text-lg px-8"
+            className="bg-green-600 hover:bg-green-700 text-lg px-8 py-6"
           >
-            <Link to="/signin?role=student">Student Login</Link>
+            <Link to="/signin?role=student">
+              <span className="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                </svg>
+                Student Login
+              </span>
+            </Link>
           </Button>
           <Button 
             asChild 
             size="lg"
-            className="bg-blue-600 hover:bg-blue-700 text-lg px-8"
+            className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-6"
           >
-            <Link to="/signin?role=admin">Admin Login</Link>
+            <Link to="/signin?role=admin">
+              <span className="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
+                </svg>
+                Admin Login
+              </span>
+            </Link>
           </Button>
         </motion.div>
         
