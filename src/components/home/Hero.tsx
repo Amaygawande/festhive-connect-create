@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 
 const Hero = () => {
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/lovable-uploads/f32ffd27-9453-4435-af69-4e31d1b2e537.png)' }}>
-      <div className="absolute inset-0 bg-gradient-to-b from-festblue/95 to-festblue/90"></div>
+    <div className="relative min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/lovable-uploads/d8ec7a8e-acb5-411f-8e0a-bf9b75d7b8c6.png)' }}>
+      <div className="absolute inset-0 bg-gradient-to-b from-festblue/80 to-festblue/70"></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.h1 
@@ -48,7 +48,29 @@ const Hero = () => {
             size="lg"
             className="border-white text-white hover:bg-white/10 text-lg px-8"
           >
-            <a href="#about">Learn More</a>
+            <a href="#contact">Contact Us</a>
+          </Button>
+        </motion.div>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="mt-8 flex flex-col sm:flex-row justify-center gap-4"
+        >
+          <Button 
+            asChild 
+            size="lg"
+            className="bg-green-600 hover:bg-green-700 text-lg px-8"
+          >
+            <Link to="/signin?role=student">Student Login</Link>
+          </Button>
+          <Button 
+            asChild 
+            size="lg"
+            className="bg-blue-600 hover:bg-blue-700 text-lg px-8"
+          >
+            <Link to="/signin?role=admin">Admin Login</Link>
           </Button>
         </motion.div>
         
@@ -56,7 +78,7 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1 }}
-          className="mt-20"
+          className="mt-16"
         >
           <a 
             href="#about" 

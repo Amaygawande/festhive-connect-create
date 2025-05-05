@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
@@ -10,6 +10,27 @@ const ContactForm = () => {
     subject: '',
     message: '',
   });
+  const contactRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    // Check if URL has #contact and scroll to it if needed
+    if (window.location.hash === '#contact' && contactRef.current) {
+      contactRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Add event listener for manual scroll requests
+    const handleHashChange = () => {
+      if (window.location.hash === '#contact' && contactRef.current) {
+        contactRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+    
+    window.addEventListener('hashchange', handleHashChange);
+    
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -33,7 +54,7 @@ const ContactForm = () => {
   };
 
   return (
-    <section id="contact" className="py-20 bg-festblue">
+    <section id="contact" ref={contactRef} className="py-20 bg-festblue">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white">Get In Touch</h2>

@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
@@ -10,7 +10,18 @@ const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [role, setRole] = useState<'student' | 'admin'>('student');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Check if role is specified in URL
+    const params = new URLSearchParams(location.search);
+    const roleParam = params.get('role');
+    if (roleParam === 'admin' || roleParam === 'student') {
+      setRole(roleParam);
+    }
+  }, [location]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,12 +66,17 @@ const SignIn = () => {
             navigate('/verify-otp', { state: { email } });
           }
         } else {
-          // For demo purposes, allow any credential combination and set as student
-          localStorage.setItem('userRole', 'student');
+          // For demo purposes, allow any credential combination and set as selected role
+          localStorage.setItem('userRole', role);
           localStorage.setItem('userEmail', email);
           localStorage.setItem('emailVerified', 'true');
-          toast.success('Signed in successfully');
-          navigate('/student/dashboard');
+          toast.success(`Signed in as ${role} successfully`);
+          
+          if (role === 'admin') {
+            navigate('/admin/dashboard');
+          } else {
+            navigate('/student/dashboard');
+          }
         }
       }
     }, 1000);
@@ -73,8 +89,33 @@ const SignIn = () => {
       <div className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="glass-card p-8 max-w-md w-full">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-white">Sign In</h2>
+            <h2 className="text-3xl font-bold text-white">
+              {role === 'admin' ? 'Admin Sign In' : 'Student Sign In'}
+            </h2>
             <p className="mt-2 text-gray-300">Sign in to your IES FESTHIVE account</p>
+          </div>
+          
+          <div className="mb-6 flex rounded-md overflow-hidden">
+            <button
+              onClick={() => setRole('student')}
+              className={`flex-1 py-2 ${
+                role === 'student'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-gray-700 text-gray-300'
+              }`}
+            >
+              Student
+            </button>
+            <button
+              onClick={() => setRole('admin')}
+              className={`flex-1 py-2 ${
+                role === 'admin'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-700 text-gray-300'
+              }`}
+            >
+              Admin
+            </button>
           </div>
           
           <form className="space-y-6" onSubmit={handleSubmit}>
@@ -90,7 +131,7 @@ const SignIn = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2 bg-festblue-light border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-festblue-accent text-white"
-                placeholder="student@ies.edu or admin@ies.edu"
+                placeholder={role === 'admin' ? 'admin@ies.edu' : 'student@ies.edu'}
               />
             </div>
             
@@ -106,7 +147,7 @@ const SignIn = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-2 bg-festblue-light border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-festblue-accent text-white"
-                placeholder="student123 or admin123"
+                placeholder={role === 'admin' ? 'admin123' : 'student123'}
               />
             </div>
             
@@ -134,7 +175,11 @@ const SignIn = () => {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-festblue-accent hover:bg-festblue-accent/80 py-2"
+                className={`w-full py-2 ${
+                  role === 'admin' 
+                    ? 'bg-blue-600 hover:bg-blue-700' 
+                    : 'bg-green-600 hover:bg-green-700'
+                }`}
               >
                 {isLoading ? (
                   <>
@@ -145,7 +190,7 @@ const SignIn = () => {
                     Signing in...
                   </>
                 ) : (
-                  'Sign in'
+                  `Sign in as ${role === 'admin' ? 'Admin' : 'Student'}`
                 )}
               </Button>
             </div>

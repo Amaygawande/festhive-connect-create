@@ -13,6 +13,8 @@ interface Event {
   name: string;
   date: string;
   venue: string;
+  description?: string;
+  imageUrl?: string;
   registrations: number;
   status: string;
 }
@@ -49,6 +51,8 @@ const ManageEvents = () => {
           name: 'Tech Innovate 2023',
           date: '2023-06-15',
           venue: 'Main Auditorium',
+          description: 'Join us for a day of technology innovation showcases, workshops, and exciting competitions!',
+          imageUrl: '/placeholder.svg',
           registrations: 120,
           status: 'Completed',
         },
@@ -57,6 +61,8 @@ const ManageEvents = () => {
           name: 'Cultural Night 2023',
           date: '2023-07-25',
           venue: 'Open Air Theatre',
+          description: 'Experience a vibrant celebration of music, dance, and art with performances from talented students.',
+          imageUrl: '/placeholder.svg',
           registrations: 180,
           status: 'Completed',
         },
@@ -65,6 +71,8 @@ const ManageEvents = () => {
           name: 'Hackathon 2023',
           date: '2023-09-10',
           venue: 'CS Building',
+          description: 'Put your coding skills to the test in this 24-hour hackathon and build innovative solutions.',
+          imageUrl: '/placeholder.svg',
           registrations: 75,
           status: 'Completed',
         },
@@ -73,6 +81,8 @@ const ManageEvents = () => {
           name: 'Annual Sports Meet 2023',
           date: '2023-11-05',
           venue: 'Sports Complex',
+          description: 'Compete in various athletic events and represent your department in this annual sports celebration.',
+          imageUrl: '/placeholder.svg',
           registrations: 210,
           status: 'Completed',
         },
@@ -81,6 +91,8 @@ const ManageEvents = () => {
           name: 'Tech Innovate 2024',
           date: '2024-06-20',
           venue: 'Main Auditorium',
+          description: 'The biggest tech event of the year returns with even more exciting innovations and opportunities.',
+          imageUrl: '/placeholder.svg',
           registrations: 45,
           status: 'Upcoming',
         },
@@ -118,6 +130,14 @@ const ManageEvents = () => {
       day: 'numeric',
     };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const viewEventDetails = (id: number) => {
+    // In a real app, this would navigate to a details page
+    const event = events.find(e => e.id === id);
+    if (event) {
+      toast.info(`Viewing details for: ${event.name}`);
+    }
   };
 
   return (
@@ -192,14 +212,24 @@ const ManageEvents = () => {
                           </span>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            onClick={() => handleDeleteEvent(event.id)}
-                            className="h-8 w-8 p-0 text-red-500 hover:text-red-300 hover:bg-red-500/10"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                            <span className="sr-only">Delete</span>
-                          </Button>
+                          <div className="flex justify-end space-x-2">
+                            <Button
+                              variant="ghost"
+                              onClick={() => viewEventDetails(event.id)}
+                              className="h-8 w-8 p-0 text-blue-500 hover:text-blue-300 hover:bg-blue-500/10"
+                            >
+                              <Eye className="h-4 w-4" />
+                              <span className="sr-only">View</span>
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              onClick={() => handleDeleteEvent(event.id)}
+                              className="h-8 w-8 p-0 text-red-500 hover:text-red-300 hover:bg-red-500/10"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              <span className="sr-only">Delete</span>
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
