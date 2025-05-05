@@ -29,10 +29,14 @@ const Home = () => {
       
       <main className="flex-grow">
         <Hero />
-        <About />
+        <section id="about">
+          <About />
+        </section>
         <ImageCarousel />
         <Features />
-        <ContactForm />
+        <section id="contact">
+          <ContactForm />
+        </section>
       </main>
       
       <Footer />
