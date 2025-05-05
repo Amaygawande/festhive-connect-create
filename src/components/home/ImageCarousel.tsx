@@ -2,11 +2,19 @@
 import React, { useState, useEffect } from 'react';
 
 const images = [
-  'https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1500673922987-e212871fec22?auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&q=80',
+  '/lovable-uploads/04c994b3-e394-4fd2-9d22-c761aeb2e694.png', // Main campus view
+  'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&q=80', // College academic building
+  'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80', // College library
+  'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?auto=format&fit=crop&q=80', // College auditorium
+  'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&q=80', // College sports event
+];
+
+const imageDescriptions = [
+  'IES University Bhopal Main Campus',
+  'Modern Academic Building',
+  'State-of-the-art Library',
+  'Multipurpose Auditorium',
+  'Annual Sports Tournament',
 ];
 
 const ImageCarousel = () => {
@@ -24,8 +32,9 @@ const ImageCarousel = () => {
     <section className="py-20 bg-festblue-light overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white">Event Gallery</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white">IES University Gallery</h2>
           <div className="w-20 h-1 bg-festblue-accent mx-auto mt-4"></div>
+          <p className="text-gray-300 mt-4">Glimpses of our beautiful campus and vibrant college life</p>
         </div>
         
         <div className="relative">
@@ -39,14 +48,17 @@ const ImageCarousel = () => {
               >
                 <img
                   src={image}
-                  alt={`Festival image ${index + 1}`}
+                  alt={imageDescriptions[index]}
                   className="w-full h-full object-cover object-center"
                 />
+                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-4">
+                  <p className="text-lg font-semibold">{imageDescriptions[index]}</p>
+                </div>
               </div>
             ))}
           </div>
           
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
             {images.map((_, index) => (
               <button
                 key={index}
