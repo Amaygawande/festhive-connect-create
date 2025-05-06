@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 
 const images = [
-  '/lovable-uploads/04c994b3-e394-4fd2-9d22-c761aeb2e694.png', // Main campus view
+  '/lovable-uploads/89e14073-b4b8-4817-a6d6-159c0776042e.png', // Main campus view with welcome sign
   'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&q=80', // College academic building
   'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80', // College library
   'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?auto=format&fit=crop&q=80', // College auditorium
@@ -10,8 +10,8 @@ const images = [
 ];
 
 const imageDescriptions = [
-  'IES University Bhopal Main Campus',
-  'Modern Academic Building',
+  'IES College of Technology Bhopal Main Campus',
+  'Modern Academic Facilities',
   'State-of-the-art Library',
   'Multipurpose Auditorium',
   'Annual Sports Tournament',
@@ -32,7 +32,7 @@ const ImageCarousel = () => {
     <section className="py-20 bg-festblue-light overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white">IES University Gallery</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white">IES College of Technology Gallery</h2>
           <div className="w-20 h-1 bg-festblue-accent mx-auto mt-4"></div>
           <p className="text-gray-300 mt-4">Glimpses of our beautiful campus and vibrant college life</p>
         </div>

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 const Hero = () => {
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/lovable-uploads/04c994b3-e394-4fd2-9d22-c761aeb2e694.png)' }}>
+    <div className="relative min-h-screen flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/lovable-uploads/89e14073-b4b8-4817-a6d6-159c0776042e.png)' }}>
       <div className="absolute inset-0 bg-gradient-to-b from-festblue/80 to-festblue/70"></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
