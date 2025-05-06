@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
 const images = [
+  '/lovable-uploads/7ab640ec-a0be-4b37-b56c-41bce4d2e030.png', // Main IES University building with welcome sign
   '/lovable-uploads/a0bb330a-ba3b-4ec1-b18c-138309840aea.png', // Main IES University building
-  '/lovable-uploads/89e14073-b4b8-4817-a6d6-159c0776042e.png', // Main campus view with welcome sign
+  '/lovable-uploads/89e14073-b4b8-4817-a6d6-159c0776042e.png', // Main campus view
   'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&q=80', // College academic building
   'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80', // College library
-  'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?auto=format&fit=crop&q=80', // College auditorium
 ];
 
 const imageDescriptions = [
+  'IES University Bhopal Main Entrance',
   'IES College of Technology Bhopal Main Building',
   'IES College of Technology Bhopal Campus',
   'Modern Academic Facilities',
   'State-of-the-art Library',
-  'Multipurpose Auditorium',
 ];
 
 const ImageCarousel = () => {
