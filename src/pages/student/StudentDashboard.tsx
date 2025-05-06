@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import StudentSidebar from '@/components/student/StudentSidebar';
 import { Button } from '@/components/ui/button';
 import { Calendar, Bell } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface Event {
   id: number;
@@ -108,6 +109,55 @@ const StudentDashboard = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  const registerForEvent = (eventId: number) => {
+    // Get the event details
+    const event = upcomingEvents.find(event => event.id === eventId);
+    if (!event) return;
+    
+    // Check if already registered
+    if (event.registered) {
+      toast.info("You're already registered for this event!");
+      return;
+    }
+    
+    // Get current registrations
+    const storedEvents = localStorage.getItem('events');
+    if (!storedEvents) return;
+    
+    const allEvents: Event[] = JSON.parse(storedEvents);
+    
+    // Update the event's registration count
+    const updatedEvents = allEvents.map(e => {
+      if (e.id === eventId) {
+        return {...e, registrations: e.registrations + 1};
+      }
+      return e;
+    });
+    
+    // Store updated events
+    localStorage.setItem('events', JSON.stringify(updatedEvents));
+    
+    // Update registered events in localStorage
+    const registeredEventIds = JSON.parse(localStorage.getItem('registeredEvents') || '[]');
+    const updatedRegisteredEvents = [...registeredEventIds, eventId];
+    localStorage.setItem('registeredEvents', JSON.stringify(updatedRegisteredEvents));
+    
+    // Update UI
+    setUpcomingEvents(upcomingEvents.map(e => {
+      if (e.id === eventId) {
+        return {...e, registered: true};
+      }
+      return e;
+    }));
+    
+    // Add to registered events
+    if (event) {
+      setRegisteredEvents([...registeredEvents, {...event, registered: true}]);
+    }
+    
+    toast.success(`Successfully registered for ${event.name}!`);
+  };
+
   return (
     <div className="min-h-screen flex bg-festblue">
       {/* Sidebar */}
@@ -186,27 +236,37 @@ const StudentDashboard = () => {
             
             <div className="glass-card p-6">
               {upcomingEvents.length > 0 ? (
-                <div className="space-y-4">
-                  {upcomingEvents.map(event => (
-                    <div key={event.id} className="border-b border-gray-700 pb-4 last:border-0 last:pb-0">
-                      <div className="flex justify-between">
-                        <div>
-                          <h3 className="text-white font-semibold">{event.name}</h3>
-                          <p className="text-gray-400 text-sm">{formatDate(event.date)} • {event.venue}</p>
-                        </div>
-                        <Button 
-                          size="sm" 
-                          className={event.registered 
-                            ? "bg-gray-600 hover:bg-gray-700" 
-                            : "bg-festblue-accent hover:bg-festblue-accent/80"}
-                          disabled={event.registered}
-                        >
-                          {event.registered ? 'Registered' : 'Register'}
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-gray-700">
+                      <TableHead className="text-white">Event Name</TableHead>
+                      <TableHead className="text-white">Date</TableHead>
+                      <TableHead className="text-white">Venue</TableHead>
+                      <TableHead className="text-white text-right">Action</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {upcomingEvents.map(event => (
+                      <TableRow key={event.id} className="border-gray-700">
+                        <TableCell className="text-white font-medium">{event.name}</TableCell>
+                        <TableCell className="text-gray-300">{formatDate(event.date)}</TableCell>
+                        <TableCell className="text-gray-300">{event.venue}</TableCell>
+                        <TableCell className="text-right">
+                          <Button 
+                            size="sm" 
+                            className={event.registered 
+                              ? "bg-gray-600 hover:bg-gray-700" 
+                              : "bg-festblue-accent hover:bg-festblue-accent/80"}
+                            disabled={event.registered}
+                            onClick={() => registerForEvent(event.id)}
+                          >
+                            {event.registered ? 'Registered' : 'Register'}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               ) : (
                 <p className="text-gray-300 text-center py-4">No upcoming events at the moment.</p>
               )}
@@ -219,26 +279,28 @@ const StudentDashboard = () => {
             
             <div className="glass-card p-6">
               {registeredEvents.length > 0 ? (
-                <div className="space-y-4">
-                  {registeredEvents.map(event => (
-                    <div key={event.id} className="border-b border-gray-700 pb-4 last:border-0 last:pb-0">
-                      <div className="flex justify-between">
-                        <div>
-                          <h3 className="text-white font-semibold">{event.name}</h3>
-                          <p className="text-gray-400 text-sm">{formatDate(event.date)} • {event.venue}</p>
-                          <p className="text-gray-500 text-xs mt-1">Registration status: <span className="text-green-400">Confirmed</span></p>
-                        </div>
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          className="border-festblue-accent text-festblue-accent hover:bg-festblue-accent/10"
-                        >
-                          View Details
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-gray-700">
+                      <TableHead className="text-white">Event Name</TableHead>
+                      <TableHead className="text-white">Date</TableHead>
+                      <TableHead className="text-white">Venue</TableHead>
+                      <TableHead className="text-white text-right">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {registeredEvents.map(event => (
+                      <TableRow key={event.id} className="border-gray-700">
+                        <TableCell className="text-white font-medium">{event.name}</TableCell>
+                        <TableCell className="text-gray-300">{formatDate(event.date)}</TableCell>
+                        <TableCell className="text-gray-300">{event.venue}</TableCell>
+                        <TableCell className="text-right">
+                          <span className="inline-block px-2 py-1 text-xs rounded-full bg-green-900/30 text-green-400">Confirmed</span>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               ) : (
                 <p className="text-gray-300 text-center py-4">You haven't registered for any events yet.</p>
               )}
